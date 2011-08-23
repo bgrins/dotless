@@ -34,7 +34,7 @@ namespace dotless.Core.Parser.Tree
 
             Path = regex.IsMatch(path) ? path : path + ".less";
 
-            Css = Path.EndsWith("css");
+            Css = Path.EndsWith("css") && !Path.StartsWith("!");
 
             if(!Css)
                 Importer.Import(this);
