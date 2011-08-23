@@ -9,6 +9,7 @@ namespace dotless.Core.Parser.Tree
 
     public class Import : Directive
     {
+        public static string FORCE_IMPORT_PREFIX = "!";
         public Importer Importer { get; set; }
         public string Path { get; set; }
         protected Node OriginalPath { get; set; }
@@ -34,7 +35,13 @@ namespace dotless.Core.Parser.Tree
 
             Path = regex.IsMatch(path) ? path : path + ".less";
 
-            Css = Path.EndsWith("css") && !Path.StartsWith("!");
+            Css = Path.EndsWith("css");
+
+            if (Css && Path.StartsWith(FORCE_IMPORT_PREFIX))
+            {
+                Css = false;
+                Path = Path.Substring(FORCE_IMPORT_PREFIX.Length);
+            }
 
             if(!Css)
                 Importer.Import(this);
